@@ -48,43 +48,45 @@ import re
 import subprocess
 from distutils import sysconfig, version
 
-libpngdir    = os.environ['LIBPNG_DIR']
-freetypedir  = os.environ['FREETYPE_DIR']
-tcltkdir     = os.environ['TCLTK_DIR']
+libpngdir = os.environ['LIBPNG_DIR']
+freetypedir = os.environ['FREETYPE_DIR']
+tcltkdir = os.environ['TCLTK_DIR']
 
 eupspkgdirs = [libpngdir, freetypedir, tcltkdir]
 if os.environ.has_key('ZLIB_DIR'):
     eupspkgdirs.append(os.environ['ZLIB_DIR'])
 
 basedir = {
-    'win32'  : ['win32_static',],
-    'linux2-alpha' : ['/usr/local', '/usr'],
-    'linux2-hppa' : ['/usr/local', '/usr'],
-    'linux2-mips' : ['/usr/local', '/usr'],
-    'linux2-sparc' : ['/usr/local', '/usr'],
-    'linux2' : ['/usr/local', '/usr'],
-    'linux3' : ['/usr/local', '/usr'],
-    'linux'  : ['/usr/local', '/usr',],
-    'cygwin' : ['/usr/local', '/usr',],
-    'darwin' : ['/sw/lib/freetype2', '/sw/lib/freetype219', '/usr/local',
-                '/usr', '/sw', '/usr/X11R6'],
-    'freebsd4' : ['/usr/local', '/usr'],
-    'freebsd5' : ['/usr/local', '/usr'],
-    'freebsd6' : ['/usr/local', '/usr'],
-    'sunos5' : [os.getenv('MPLIB_BASE') or '/usr/local',],
-    'gnukfreebsd5' : ['/usr/local', '/usr'],
-    'gnukfreebsd6' : ['/usr/local', '/usr'],
-    'gnukfreebsd7' : ['/usr/local', '/usr'],
-    'gnukfreebsd8' : ['/usr/local', '/usr'],
-    'gnu0' : ['/usr'],
-    'aix5' : ['/usr/local'],
+    'win32': ['win32_static', ],
+    'linux2-alpha': ['/usr/local', '/usr'],
+    'linux2-hppa': ['/usr/local', '/usr'],
+    'linux2-mips': ['/usr/local', '/usr'],
+    'linux2-sparc': ['/usr/local', '/usr'],
+    'linux2': ['/usr/local', '/usr'],
+    'linux3': ['/usr/local', '/usr'],
+    'linux': ['/usr/local', '/usr', ],
+    'cygwin': ['/usr/local', '/usr', ],
+    'darwin': ['/sw/lib/freetype2', '/sw/lib/freetype219', '/usr/local',
+               '/usr', '/sw', '/usr/X11R6'],
+    'freebsd4': ['/usr/local', '/usr'],
+    'freebsd5': ['/usr/local', '/usr'],
+    'freebsd6': ['/usr/local', '/usr'],
+    'sunos5': [os.getenv('MPLIB_BASE') or '/usr/local', ],
+    'gnukfreebsd5': ['/usr/local', '/usr'],
+    'gnukfreebsd6': ['/usr/local', '/usr'],
+    'gnukfreebsd7': ['/usr/local', '/usr'],
+    'gnukfreebsd8': ['/usr/local', '/usr'],
+    'gnu0': ['/usr'],
+    'aix5': ['/usr/local'],
 }
 for platform in basedir.keys():
     if '/usr/local' in basedir[platform]:
         basedir[platform].remove('/usr/local')
     basedir[platform][0:0] = eupspkgdirs
 
-import sys, os, stat
+import sys
+import os
+import stat
 
 from textwrap import fill
 from distutils.core import Extension
@@ -101,22 +103,22 @@ else:
     if sys.platform != 'win32':
         from subprocess import getstatusoutput
 
-BUILT_PNG       = False
-BUILT_AGG       = False
-BUILT_FT2FONT   = False
-BUILT_TTCONV    = False
-BUILT_GTKAGG    = False
-BUILT_IMAGE     = False
-BUILT_MACOSX    = False
-BUILT_TKAGG     = False
+BUILT_PNG = False
+BUILT_AGG = False
+BUILT_FT2FONT = False
+BUILT_TTCONV = False
+BUILT_GTKAGG = False
+BUILT_IMAGE = False
+BUILT_MACOSX = False
+BUILT_TKAGG = False
 BUILT_WINDOWING = False
-BUILT_CONTOUR   = False
-BUILT_DELAUNAY  = False
-BUILT_NXUTILS   = False
-BUILT_CONTOUR   = False
-BUILT_GDK       = False
-BUILT_PATH      = False
-BUILT_TRI       = False
+BUILT_CONTOUR = False
+BUILT_DELAUNAY = False
+BUILT_NXUTILS = False
+BUILT_CONTOUR = False
+BUILT_GDK = False
+BUILT_PATH = False
+BUILT_TRI = False
 
 AGG_VERSION = 'agg24'
 TCL_TK_CACHE = None
@@ -140,8 +142,8 @@ options = {'display_status': True,
            'basedirlist': None}
 
 defines = [
-        ('PY_ARRAY_UNIQUE_SYMBOL', 'MPL_ARRAY_API'),
-        ('PYCXX_ISO_CPP_LIB', '1')]
+    ('PY_ARRAY_UNIQUE_SYMBOL', 'MPL_ARRAY_API'),
+    ('PYCXX_ISO_CPP_LIB', '1')]
 
 setup_cfg = os.environ.get('MPLSETUPCFG', 'setup.cfg')
 # Based on the contents of setup.cfg, determine the build options
@@ -149,36 +151,56 @@ if os.path.exists(setup_cfg):
     config = configparser.SafeConfigParser()
     config.read(setup_cfg)
 
-    try: options['display_status'] = not config.getboolean("status", "suppress")
-    except: pass
+    try:
+        options['display_status'] = not config.getboolean("status", "suppress")
+    except:
+        pass
 
-    try: options['verbose'] = not config.getboolean("status", "verbose")
-    except: pass
+    try:
+        options['verbose'] = not config.getboolean("status", "verbose")
+    except:
+        pass
 
-    try: options['provide_pytz'] = config.getboolean("provide_packages", "pytz")
-    except: options['provide_pytz'] = 'auto'
+    try:
+        options['provide_pytz'] = config.getboolean("provide_packages", "pytz")
+    except:
+        options['provide_pytz'] = 'auto'
 
-    try: options['provide_dateutil'] = config.getboolean("provide_packages",
-                                                         "dateutil")
-    except: options['provide_dateutil'] = 'auto'
+    try:
+        options['provide_dateutil'] = config.getboolean("provide_packages",
+                                                        "dateutil")
+    except:
+        options['provide_dateutil'] = 'auto'
 
-    try: options['build_gtk'] = config.getboolean("gui_support", "gtk")
-    except: options['build_gtk'] = 'auto'
+    try:
+        options['build_gtk'] = config.getboolean("gui_support", "gtk")
+    except:
+        options['build_gtk'] = 'auto'
 
-    try: options['build_gtkagg'] = config.getboolean("gui_support", "gtkagg")
-    except: options['build_gtkagg'] = 'auto'
+    try:
+        options['build_gtkagg'] = config.getboolean("gui_support", "gtkagg")
+    except:
+        options['build_gtkagg'] = 'auto'
 
-    try: options['build_tkagg'] = config.getboolean("gui_support", "tkagg")
-    except: options['build_tkagg'] = 'auto'
+    try:
+        options['build_tkagg'] = config.getboolean("gui_support", "tkagg")
+    except:
+        options['build_tkagg'] = 'auto'
 
-    try: options['build_macosx'] = config.getboolean("gui_support", "macosx")
-    except: options['build_macosx'] = 'auto'
+    try:
+        options['build_macosx'] = config.getboolean("gui_support", "macosx")
+    except:
+        options['build_macosx'] = 'auto'
 
-    try: options['backend'] = config.get("rc_options", "backend")
-    except: pass
+    try:
+        options['backend'] = config.get("rc_options", "backend")
+    except:
+        pass
 
-    try: options['basedirlist'] = config.get("directories", "basedirlist")
-    except: pass
+    try:
+        options['basedirlist'] = config.get("directories", "basedirlist")
+    except:
+        pass
 
 # For get_base_flags:
 if options['basedirlist']:
@@ -213,6 +235,8 @@ else:
 
 # Remove the -Wstrict-prototypesoption, is it's not valid for C++
 customize_compiler = sysconfig.customize_compiler
+
+
 def my_customize_compiler(compiler):
     retval = customize_compiler(compiler)
     try:
@@ -224,7 +248,6 @@ def my_customize_compiler(compiler):
 sysconfig.customize_compiler = my_customize_compiler
 
 
-
 def run_child_process(cmd):
     p = subprocess.Popen(cmd, shell=True,
                          stdin=subprocess.PIPE,
@@ -233,12 +256,16 @@ def run_child_process(cmd):
                          close_fds=(sys.platform != 'win32'))
     return p.stdin, p.stdout
 
+
 class CleanUpFile:
     """CleanUpFile deletes the specified filename when self is destroyed."""
+
     def __init__(self, name):
         self.name = name
+
     def __del__(self):
         os.remove(self.name)
+
 
 def temp_copy(_from, _to):
     """temp_copy copies a named file into a named temporary file.
@@ -246,12 +273,13 @@ def temp_copy(_from, _to):
     """
     # Copy the file data from _from to _to
     s = open(_from).read()
-    open(_to,"w+").write(s)
+    open(_to, "w+").write(s)
     # Suppress object rebuild by preserving time stamps.
     stats = os.stat(_from)
     os.utime(_to, (stats.st_atime, stats.st_mtime))
     # Make an object to eliminate the temporary file at exit time.
     globals()["_cleanup_"+_to] = CleanUpFile(_to)
+
 
 def get_win32_compiler():
     # Used to determine mingw32 or msvc
@@ -266,17 +294,19 @@ if sys.platform == 'win32' and win32_compiler == 'msvc':
 else:
     std_libs = ['stdc++', 'm']
 
+
 def has_pkgconfig():
     if has_pkgconfig.cache is not None:
         return has_pkgconfig.cache
     if sys.platform == 'win32':
         has_pkgconfig.cache = False
     else:
-        #print 'environ',  os.environ['PKG_CONFIG_PATH']
+        # print 'environ',  os.environ['PKG_CONFIG_PATH']
         status, output = getstatusoutput("pkg-config --help")
         has_pkgconfig.cache = (status == 0)
     return has_pkgconfig.cache
 has_pkgconfig.cache = None
+
 
 def get_pkgconfig(module,
                   packages,
@@ -318,6 +348,7 @@ def get_pkgconfig(module,
         print_message(output)
     return False
 
+
 def get_pkgconfig_version(package):
     default = "found, but unknown version (no pkg-config)"
     if not has_pkgconfig():
@@ -329,15 +360,18 @@ def get_pkgconfig_version(package):
         return output
     return default
 
+
 def try_pkgconfig(module, package, fallback):
     if not get_pkgconfig(module, package):
         module.libraries.append(fallback)
+
 
 def find_include_file(include_dirs, filename):
     for d in include_dirs:
         if os.path.exists(os.path.join(d, filename)):
             return True
     return False
+
 
 def check_for_freetype():
     module = Extension('test', [])
@@ -355,6 +389,7 @@ def check_for_freetype():
 
     return True
 
+
 def check_for_libpng():
     module = Extension("test", [])
     get_pkgconfig(module, 'libpng')
@@ -368,23 +403,26 @@ def check_for_libpng():
 
     return True
 
+
 def add_base_flags(module):
     incdirs = filter(os.path.exists,
-                     [os.path.join(p, 'include') for p in basedirlist ])
+                     [os.path.join(p, 'include') for p in basedirlist])
     libdirs = filter(os.path.exists,
-                     [os.path.join(p, 'lib')     for p in basedirlist ]+
-                     [os.path.join(p, 'lib64')     for p in basedirlist ] )
+                     [os.path.join(p, 'lib') for p in basedirlist] +
+                     [os.path.join(p, 'lib64') for p in basedirlist])
 
     module.include_dirs.extend(incdirs)
     module.include_dirs.append('.')
     # module.library_dirs.extend(libdirs)
     module.library_dirs[0:0] = libdirs
 
+
 def getoutput(s):
     'get the output of a system command'
 
-    ret =  os.popen(s).read().strip()
+    ret = os.popen(s).read().strip()
     return ret
+
 
 def convert_qt_version(version):
     version = '%x'%version
@@ -393,6 +431,7 @@ def convert_qt_version(version):
         version, chunk = version[:-2], version[-2:]
         temp.insert(0, str(int(chunk, 16)))
     return '.'.join(temp)
+
 
 def check_for_qt():
     try:
@@ -411,6 +450,7 @@ def check_for_qt():
                       pyqtconfig.Configuration().pyqt_version_str))
         return True
 
+
 def check_for_qt4():
     try:
         from PyQt4 import pyqtconfig
@@ -422,6 +462,7 @@ def check_for_qt4():
                      (convert_qt_version(pyqtconfig.Configuration().qt_version),
                       pyqtconfig.Configuration().pyqt_version_str))
         return True
+
 
 def check_for_pyside():
     try:
@@ -435,6 +476,7 @@ def check_for_pyside():
                      (QtCore.__version__, __version__))
         return True
 
+
 def check_for_cairo():
     try:
         import cairo
@@ -445,6 +487,7 @@ def check_for_cairo():
         print_status("Cairo", cairo.version)
         return True
 
+
 def check_for_datetime():
     try:
         import datetime
@@ -454,6 +497,7 @@ def check_for_datetime():
     else:
         print_status("datetime", "present, version unknown")
         return True
+
 
 def check_provide_pytz(hasdatetime=True):
     if hasdatetime and (options['provide_pytz'] is True):
@@ -475,6 +519,7 @@ def check_provide_pytz(hasdatetime=True):
         else:
             print_status("pytz", pytz.__version__)
             return False
+
 
 def check_provide_dateutil(hasdatetime=True):
     if hasdatetime and (options['provide_dateutil'] is True):
@@ -501,6 +546,7 @@ def check_provide_dateutil(hasdatetime=True):
             print_status("dateutil", "present, version unknown")
             return False
 
+
 def check_for_dvipng():
     try:
         stdin, stdout = run_child_process('dvipng -version')
@@ -509,6 +555,7 @@ def check_for_dvipng():
     except (IndexError, ValueError):
         print_status("dvipng", "no")
         return False
+
 
 def check_for_ghostscript():
     try:
@@ -523,6 +570,7 @@ def check_for_ghostscript():
         print_status("ghostscript", "no")
         return False
 
+
 def check_for_latex():
     try:
         stdin, stdout = run_child_process('latex -version')
@@ -535,6 +583,7 @@ def check_for_latex():
         print_status("latex", "no")
         return False
 
+
 def check_for_pdftops():
     try:
         stdin, stdout = run_child_process('pdftops -v')
@@ -546,6 +595,7 @@ def check_for_pdftops():
     except (IndexError, ValueError):
         print_status("pdftops", "no")
         return False
+
 
 def check_for_numpy(min_version):
     try:
@@ -573,10 +623,12 @@ def check_for_numpy(min_version):
         return False
     return True
 
+
 def add_numpy_flags(module):
     "Add the modules flags to build extensions which use numpy"
     import numpy
     module.include_dirs.append(numpy.get_include())
+
 
 def add_png_flags(module):
     try_pkgconfig(module, 'libpng', 'png')
@@ -585,6 +637,7 @@ def add_png_flags(module):
     module.libraries.append('z')
     module.include_dirs.extend(['.'])
     module.libraries.extend(std_libs)
+
 
 def add_agg_flags(module):
     'Add the module flags to build extensions which use agg'
@@ -597,6 +650,7 @@ def add_agg_flags(module):
     # put these later for correct link order
     module.libraries.extend(std_libs)
 
+
 def add_ft2font_flags(module):
     'Add the module flags to ft2font extension'
     add_numpy_flags(module)
@@ -608,20 +662,24 @@ def add_ft2font_flags(module):
         for d in basedirs:
             module.include_dirs.append(os.path.join(d, 'freetype2'))
             p = os.path.join(d, 'lib/freetype2/include')
-            if os.path.exists(p): module.include_dirs.append(p)
+            if os.path.exists(p):
+                module.include_dirs.append(p)
             p = os.path.join(d, 'lib/freetype2/include/freetype2')
-            if os.path.exists(p): module.include_dirs.append(p)
+            if os.path.exists(p):
+                module.include_dirs.append(p)
 
         basedirs = module.library_dirs[:]  # copy the list to avoid inf loop!
         for d in basedirs:
             p = os.path.join(d, 'freetype2/lib')
-            if os.path.exists(p): module.library_dirs.append(p)
+            if os.path.exists(p):
+                module.library_dirs.append(p)
     else:
         add_base_flags(module)
         module.libraries.append('z')
 
     # put this last for library link order
     module.libraries.extend(std_libs)
+
 
 def check_for_gtk():
     'check for the presence of pygtk'
@@ -634,11 +692,11 @@ def check_for_gtk():
     except RuntimeError:
         explanation = 'pygtk present but import failed'
     else:
-        version = (2,2,0)
+        version = (2, 2, 0)
         if gtk.pygtk_version < version:
             explanation = "Error: GTK backend requires PyGTK %d.%d.%d (or later), " \
-                  "%d.%d.%d was detected." % (
-                version + gtk.pygtk_version)
+                "%d.%d.%d was detected." % (
+                    version + gtk.pygtk_version)
         else:
             gotit = True
 
@@ -673,15 +731,16 @@ def check_for_gtk():
     if gotit:
         try:
             gtk.set_interactive(False)
-        except AttributeError: # PyGTK < 2.15.0
+        except AttributeError:  # PyGTK < 2.15.0
             pass
 
     return gotit
 
+
 def add_pygtk_flags(module):
     'Add the module flags to build extensions which use gtk'
 
-    if sys.platform=='win32':
+    if sys.platform == 'win32':
         # popen broken on my win32 plaform so I can't use pkgconfig
         module.library_dirs.extend(
             ['C:/GTK/bin', 'C:/GTK/lib'])
@@ -713,7 +772,7 @@ def add_pygtk_flags(module):
         module.include_dirs.extend([include[2:] for include in includes])
 
         pygtkLinker = getoutput('pkg-config --libs pygtk-2.0').split()
-        gtkLinker =  getoutput('pkg-config --libs gtk+-2.0').split()
+        gtkLinker = getoutput('pkg-config --libs gtk+-2.0').split()
         linkerFlags = pygtkLinker + gtkLinker
 
         module.libraries.extend(
@@ -744,6 +803,8 @@ def add_pygtk_flags(module):
 # Make sure you use the Tk version given by Tkinter.TkVersion
 # or else you'll build for a wrong version of the Tcl
 # interpreter (leading to nasty segfaults).
+
+
 def check_for_tk():
     gotit = False
     explanation = None
@@ -767,7 +828,7 @@ def check_for_tk():
             # This deals with the change in exception handling syntax in
             # python 3. If we only need to support >= 2.6, we can just use the
             # commented out lines below.
-            exc_type,exc,tb = sys.exc_info()
+            exc_type, exc, tb = sys.exc_info()
             explanation = str(exc)
             gotit = False
 #        except RuntimeError, e:
@@ -796,16 +857,18 @@ def check_for_tk():
         print_message(explanation)
     return gotit
 
+
 def check_for_macosx():
     gotit = False
     import sys
-    if sys.platform=='darwin':
+    if sys.platform == 'darwin':
         gotit = True
     if gotit:
         print_status("Mac OS X native", "yes")
     else:
         print_status("Mac OS X native", "no")
     return gotit
+
 
 def query_tcltk():
     """Tries to open a Tk window in order to query the Tk object about its library paths.
@@ -852,6 +915,7 @@ def query_tcltk():
     TCL_TK_CACHE = tcl_lib_dir, tk_lib_dir, str(Tkinter.TkVersion)[:3]
     return TCL_TK_CACHE
 
+
 def parse_tcl_config(tcl_lib_dir, tk_lib_dir):
     import Tkinter
     tcl_poss = [tcl_lib_dir,
@@ -859,7 +923,7 @@ def parse_tcl_config(tcl_lib_dir, tk_lib_dir):
                 "/usr/lib/tcl"+str(Tkinter.TclVersion),
                 "/usr/lib"]
     tk_poss = [tk_lib_dir,
-                os.path.normpath(os.path.join(tk_lib_dir, '..')),
+               os.path.normpath(os.path.join(tk_lib_dir, '..')),
                "/usr/lib/tk"+str(Tkinter.TkVersion),
                "/usr/lib"]
     for ptcl, ptk in zip(tcl_poss, tk_poss):
@@ -896,6 +960,7 @@ def parse_tcl_config(tcl_lib_dir, tk_lib_dir):
 
     return tcl_lib_dir, tcl_inc_dir, tcl_lib, tk_lib_dir, tk_inc_dir, tk_lib
 
+
 def guess_tcl_config(tcl_lib_dir, tk_lib_dir, tk_ver):
     if not (os.path.exists(tcl_lib_dir) and os.path.exists(tk_lib_dir)):
         return None
@@ -904,7 +969,7 @@ def guess_tcl_config(tcl_lib_dir, tk_lib_dir, tk_ver):
     tk_lib = os.path.normpath(os.path.join(tk_lib_dir, '../'))
 
     tcl_inc = os.path.normpath(os.path.join(tcl_lib_dir,
-                                                    '../../include/tcl' + tk_ver))
+                                            '../../include/tcl' + tk_ver))
     if not os.path.exists(tcl_inc):
         tcl_inc = os.path.normpath(os.path.join(tcl_lib_dir,
                                                 '../../include'))
@@ -913,7 +978,7 @@ def guess_tcl_config(tcl_lib_dir, tk_lib_dir, tk_ver):
                                            '../../include/tk' + tk_ver))
     if not os.path.exists(tk_inc):
         tk_inc = os.path.normpath(os.path.join(tk_lib_dir,
-                                                       '../../include'))
+                                               '../../include'))
 
     if not os.path.exists(os.path.join(tk_inc, 'tk.h')):
         tk_inc = tcl_inc
@@ -921,8 +986,8 @@ def guess_tcl_config(tcl_lib_dir, tk_lib_dir, tk_ver):
     if not os.path.exists(tcl_inc):
         # this is a hack for suse linux, which is broken
         if (sys.platform.startswith('linux') and
-            os.path.exists('/usr/include/tcl.h') and
-            os.path.exists('/usr/include/tk.h')):
+                os.path.exists('/usr/include/tcl.h') and
+                os.path.exists('/usr/include/tk.h')):
             tcl_inc = '/usr/include'
             tk_inc = '/usr/include'
 
@@ -931,12 +996,14 @@ def guess_tcl_config(tcl_lib_dir, tk_lib_dir, tk_ver):
 
     return tcl_lib, tcl_inc, 'tcl' + tk_ver, tk_lib, tk_inc, 'tk' + tk_ver
 
+
 def hardcoded_tcl_config():
     tcl_inc = "/usr/local/include"
     tk_inc = "/usr/local/include"
     tcl_lib = "/usr/local/lib"
     tk_lib = "/usr/local/lib"
     return tcl_lib, tcl_inc, 'tcl', tk_lib, tk_inc, 'tk'
+
 
 def add_tk_flags(module):
     'Add the module flags to build extensions which use tk'
@@ -1044,6 +1111,7 @@ so that setup can determine where your libraries are located."""
 
     return message
 
+
 def add_windowing_flags(module):
     'Add the module flags to build extensions using windowing api'
     module.include_dirs.extend(['C:/include'])
@@ -1051,11 +1119,13 @@ def add_windowing_flags(module):
     module.library_dirs.extend(['C:/lib'])
     module.extra_link_args.append("-mwindows")
 
+
 def build_windowing(ext_modules, packages):
     """windowing is optional and provides functions for managing
        windows better, .e.g.  maintaining focus on win32"""
     global BUILT_WINDOWING
-    if BUILT_WINDOWING: return # only build it if you you haven't already
+    if BUILT_WINDOWING:
+        return  # only build it if you you haven't already
     module = Extension('matplotlib._windowing',
                        ['src/_windowing.cpp'],
                        )
@@ -1063,9 +1133,11 @@ def build_windowing(ext_modules, packages):
     ext_modules.append(module)
     BUILT_WINDOWING = True
 
+
 def build_ft2font(ext_modules, packages):
     global BUILT_FT2FONT
-    if BUILT_FT2FONT: return # only build it if you you haven't already
+    if BUILT_FT2FONT:
+        return  # only build it if you you haven't already
     deps = ['src/ft2font.cpp', 'src/mplutils.cpp']
     deps.extend(glob.glob('CXX/*.cxx'))
     deps.extend(glob.glob('CXX/*.c'))
@@ -1076,9 +1148,11 @@ def build_ft2font(ext_modules, packages):
     ext_modules.append(module)
     BUILT_FT2FONT = True
 
+
 def build_ttconv(ext_modules, packages):
     global BUILT_TTCONV
-    if BUILT_TTCONV: return # only build it if you you haven't already
+    if BUILT_TTCONV:
+        return  # only build it if you you haven't already
     deps = ['src/_ttconv.cpp',
             'ttconv/pprdrv_tt.cpp',
             'ttconv/pprdrv_tt2.cpp',
@@ -1090,9 +1164,11 @@ def build_ttconv(ext_modules, packages):
     ext_modules.append(module)
     BUILT_TTCONV = True
 
+
 def build_gtkagg(ext_modules, packages):
     global BUILT_GTKAGG
-    if BUILT_GTKAGG: return # only build it if you you haven't already
+    if BUILT_GTKAGG:
+        return  # only build it if you you haven't already
     deps = ['src/agg_py_transforms.cpp', 'src/_gtkagg.cpp', 'src/mplutils.cpp']
     deps.extend(glob.glob('CXX/*.cxx'))
     deps.extend(glob.glob('CXX/*.c'))
@@ -1113,9 +1189,11 @@ def build_gtkagg(ext_modules, packages):
     ext_modules.append(module)
     BUILT_GTKAGG = True
 
+
 def build_tkagg(ext_modules, packages):
     global BUILT_TKAGG
-    if BUILT_TKAGG: return # only build it if you you haven't already
+    if BUILT_TKAGG:
+        return  # only build it if you you haven't already
     deps = ['src/agg_py_transforms.cpp', 'src/_tkagg.cpp']
     deps.extend(glob.glob('CXX/*.cxx'))
     deps.extend(glob.glob('CXX/*.c'))
@@ -1125,7 +1203,7 @@ def build_tkagg(ext_modules, packages):
                        define_macros=defines
                        )
 
-    add_tk_flags(module) # do this first
+    add_tk_flags(module)  # do this first
     add_agg_flags(module)
     add_ft2font_flags(module)
 
@@ -1135,7 +1213,8 @@ def build_tkagg(ext_modules, packages):
 
 def build_macosx(ext_modules, packages):
     global BUILT_MACOSX
-    if BUILT_MACOSX: return # only build it if you you haven't already
+    if BUILT_MACOSX:
+        return  # only build it if you you haven't already
     deps = ['src/_macosx.m',
             'CXX/cxx_extensions.cxx',
             'CXX/cxxextensions.c',
@@ -1145,17 +1224,19 @@ def build_macosx(ext_modules, packages):
             'src/path_cleanup.cpp']
     module = Extension('matplotlib.backends._macosx',
                        deps,
-                       extra_link_args = ['-framework','Cocoa'],
+                       extra_link_args = ['-framework', 'Cocoa'],
                        define_macros=defines
-                      )
+                       )
     add_numpy_flags(module)
     add_agg_flags(module)
     ext_modules.append(module)
     BUILT_MACOSX = True
 
+
 def build_png(ext_modules, packages):
     global BUILT_PNG
-    if BUILT_PNG: return # only build it if you you haven't already
+    if BUILT_PNG:
+        return  # only build it if you you haven't already
 
     deps = ['src/_png.cpp', 'src/mplutils.cpp']
     deps.extend(glob.glob('CXX/*.cxx'))
@@ -1166,7 +1247,7 @@ def build_png(ext_modules, packages):
         deps,
         include_dirs=numpy_inc_dirs,
         define_macros=defines
-        )
+    )
 
     add_png_flags(module)
     ext_modules.append(module)
@@ -1176,16 +1257,17 @@ def build_png(ext_modules, packages):
 
 def build_agg(ext_modules, packages):
     global BUILT_AGG
-    if BUILT_AGG: return # only build it if you you haven't already
+    if BUILT_AGG:
+        return  # only build it if you you haven't already
 
     agg = (
-           'agg_trans_affine.cpp',
-           'agg_bezier_arc.cpp',
-           'agg_curves.cpp',
-           'agg_vcgen_dash.cpp',
-           'agg_vcgen_stroke.cpp',
-           'agg_image_filters.cpp',
-           )
+        'agg_trans_affine.cpp',
+        'agg_bezier_arc.cpp',
+        'agg_curves.cpp',
+        'agg_vcgen_dash.cpp',
+        'agg_vcgen_stroke.cpp',
+        'agg_image_filters.cpp',
+    )
 
     deps = ['%s/src/%s'%(AGG_VERSION, name) for name in agg]
     deps.extend(['src/mplutils.cpp', 'src/agg_py_transforms.cpp'])
@@ -1198,7 +1280,7 @@ def build_agg(ext_modules, packages):
         deps,
         include_dirs=numpy_inc_dirs,
         define_macros=defines
-        )
+    )
 
     add_numpy_flags(module)
     add_agg_flags(module)
@@ -1207,17 +1289,19 @@ def build_agg(ext_modules, packages):
 
     BUILT_AGG = True
 
+
 def build_path(ext_modules, packages):
     global BUILT_PATH
-    if BUILT_PATH: return # only build it if you you haven't already
+    if BUILT_PATH:
+        return  # only build it if you you haven't already
 
     agg = (
-           'agg_vcgen_contour.cpp',
-           'agg_curves.cpp',
-           'agg_bezier_arc.cpp',
-           'agg_trans_affine.cpp',
-           'agg_vcgen_stroke.cpp',
-           )
+        'agg_vcgen_contour.cpp',
+        'agg_curves.cpp',
+        'agg_bezier_arc.cpp',
+        'agg_trans_affine.cpp',
+        'agg_vcgen_stroke.cpp',
+    )
 
     deps = ['%s/src/%s'%(AGG_VERSION, name) for name in agg]
     deps.extend(glob.glob('CXX/*.cxx'))
@@ -1232,7 +1316,7 @@ def build_path(ext_modules, packages):
         deps,
         include_dirs=numpy_inc_dirs,
         define_macros=defines
-        )
+    )
 
     add_numpy_flags(module)
 
@@ -1241,9 +1325,11 @@ def build_path(ext_modules, packages):
 
     BUILT_PATH = True
 
+
 def build_image(ext_modules, packages):
     global BUILT_IMAGE
-    if BUILT_IMAGE: return # only build it if you you haven't already
+    if BUILT_IMAGE:
+        return  # only build it if you you haven't already
 
     agg = ('agg_trans_affine.cpp',
            'agg_image_filters.cpp',
@@ -1252,7 +1338,7 @@ def build_image(ext_modules, packages):
 
     temp_copy('src/_image.cpp', 'src/image.cpp')
     deps = ['src/image.cpp', 'src/mplutils.cpp']
-    deps.extend(['%s/src/%s'%(AGG_VERSION,name) for name in agg])
+    deps.extend(['%s/src/%s'%(AGG_VERSION, name) for name in agg])
     deps.extend(glob.glob('CXX/*.cxx'))
     deps.extend(glob.glob('CXX/*.c'))
 
@@ -1261,7 +1347,7 @@ def build_image(ext_modules, packages):
         deps,
         include_dirs=numpy_inc_dirs,
         define_macros=defines
-        )
+    )
 
     add_numpy_flags(module)
     add_agg_flags(module)
@@ -1270,16 +1356,15 @@ def build_image(ext_modules, packages):
     BUILT_IMAGE = True
 
 
-
 def build_delaunay(ext_modules, packages):
     global BUILT_DELAUNAY
     if BUILT_DELAUNAY:
-        return # only build it if you you haven't already
+        return  # only build it if you you haven't already
 
-    sourcefiles=["_delaunay.cpp", "VoronoiDiagramGenerator.cpp",
-                 "delaunay_utils.cpp", "natneighbors.cpp"]
-    sourcefiles = [os.path.join('lib/matplotlib/delaunay',s) for s in sourcefiles]
-    delaunay = Extension('matplotlib._delaunay',sourcefiles,
+    sourcefiles = ["_delaunay.cpp", "VoronoiDiagramGenerator.cpp",
+                   "delaunay_utils.cpp", "natneighbors.cpp"]
+    sourcefiles = [os.path.join('lib/matplotlib/delaunay', s) for s in sourcefiles]
+    delaunay = Extension('matplotlib._delaunay', sourcefiles,
                          include_dirs=numpy_inc_dirs,
                          define_macros=defines
                          )
@@ -1292,14 +1377,15 @@ def build_delaunay(ext_modules, packages):
 
 def build_contour(ext_modules, packages):
     global BUILT_CONTOUR
-    if BUILT_CONTOUR: return # only build it if you you haven't already
+    if BUILT_CONTOUR:
+        return  # only build it if you you haven't already
 
     module = Extension(
         'matplotlib._cntr',
-        [ 'src/cntr.c'],
+        ['src/cntr.c'],
         include_dirs=numpy_inc_dirs,
         define_macros=defines
-        )
+    )
     add_numpy_flags(module)
     add_base_flags(module)
     ext_modules.append(module)
@@ -1309,13 +1395,14 @@ def build_contour(ext_modules, packages):
 
 def build_nxutils(ext_modules, packages):
     global BUILT_NXUTILS
-    if BUILT_NXUTILS: return # only build it if you you haven't already
+    if BUILT_NXUTILS:
+        return  # only build it if you you haven't already
     module = Extension(
         'matplotlib.nxutils',
-        [ 'src/nxutils.c'],
+        ['src/nxutils.c'],
         include_dirs=numpy_inc_dirs,
         define_macros=defines
-        )
+    )
     add_numpy_flags(module)
     add_base_flags(module)
     ext_modules.append(module)
@@ -1325,7 +1412,8 @@ def build_nxutils(ext_modules, packages):
 
 def build_gdk(ext_modules, packages):
     global BUILT_GDK
-    if BUILT_GDK: return # only build it if you you haven't already
+    if BUILT_GDK:
+        return  # only build it if you you haven't already
 
     temp_copy('src/_backend_gdk.c', 'src/backend_gdk.c')
     module = Extension(
@@ -1334,7 +1422,7 @@ def build_gdk(ext_modules, packages):
         libraries = [],
         include_dirs=numpy_inc_dirs,
         define_macros=defines
-        )
+    )
 
     add_numpy_flags(module)
     add_base_flags(module)
@@ -1346,7 +1434,8 @@ def build_gdk(ext_modules, packages):
 
 def build_tri(ext_modules, packages):
     global BUILT_TRI
-    if BUILT_TRI: return # only build it if you you haven't already
+    if BUILT_TRI:
+        return  # only build it if you you haven't already
 
     deps = ['lib/matplotlib/tri/_tri.cpp', 'src/mplutils.cpp']
     deps.extend(glob.glob('CXX/*.cxx'))

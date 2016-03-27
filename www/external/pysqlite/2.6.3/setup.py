@@ -21,7 +21,10 @@
 #    misrepresented as being the original software.
 # 3. This notice may not be removed or altered from any source distribution.
 
-import glob, os, re, sys
+import glob
+import os
+import re
+import sys
 import urllib
 import zipfile
 
@@ -47,7 +50,7 @@ extra_objects = []
 define_macros = []
 
 long_description = \
-"""Python interface to SQLite 3
+    """Python interface to SQLite 3
 
 pysqlite is an interface to the SQLite 3.x embedded relational database engine.
 It is almost fully compliant with the Python database API version 2.0 also
@@ -57,6 +60,7 @@ if sys.platform != "win32":
     define_macros.append(('MODULE_NAME', '"pysqlite2.dbapi2"'))
 else:
     define_macros.append(('MODULE_NAME', '\\"pysqlite2.dbapi2\\"'))
+
 
 class DocBuilder(Command):
     description = "Builds the documentation"
@@ -69,7 +73,8 @@ class DocBuilder(Command):
         pass
 
     def run(self):
-        import os, shutil
+        import os
+        import shutil
         try:
             shutil.rmtree("build/doc")
         except OSError:
@@ -80,6 +85,7 @@ class DocBuilder(Command):
             print "Is sphinx installed? If not, try 'sudo easy_install sphinx'."
 
 AMALGAMATION_ROOT = "amalgamation"
+
 
 def get_amalgamation():
     """Download the SQLite amalgamation if it isn't there, already."""
@@ -107,12 +113,14 @@ def get_amalgamation():
     zf.close()
     os.unlink("tmp.zip")
 
+
 class AmalgamationBuilder(build):
     description = "Build a statically built pysqlite using the amalgamtion."
 
     def __init__(self, *args, **kwargs):
         MyBuildExt.amalgamation = True
         build.__init__(self, *args, **kwargs)
+
 
 class MyBuildExt(build_ext):
     amalgamation = False
@@ -140,6 +148,7 @@ class MyBuildExt(build_ext):
             v = None
         self.__dict__[k] = v
 
+
 def get_setup_args():
 
     PYSQLITE_VERSION = None
@@ -159,42 +168,42 @@ def get_setup_args():
         sys.exit(1)
 
     data_files = [("pysqlite2-doc",
-                        glob.glob("doc/*.html") \
-                      + glob.glob("doc/*.txt") \
-                      + glob.glob("doc/*.css")),
-                   ("pysqlite2-doc/code",
-                        glob.glob("doc/code/*.py"))]
+                   glob.glob("doc/*.html")
+                   + glob.glob("doc/*.txt")
+                   + glob.glob("doc/*.css")),
+                  ("pysqlite2-doc/code",
+                   glob.glob("doc/code/*.py"))]
 
     py_modules = ["sqlite"]
     setup_args = dict(
-            name = "pysqlite",
-            version = PYSQLITE_VERSION,
-            description = "DB-API 2.0 interface for SQLite 3.x",
-            long_description=long_description,
-            author = "Gerhard Haering",
-            author_email = "gh@ghaering.de",
-            license = "zlib/libpng license",
-            platforms = "ALL",
-            url = "http://pysqlite.googlecode.com/",
-            download_url = "http://code.google.com/p/pysqlite/downloads/list",
+        name = "pysqlite",
+        version = PYSQLITE_VERSION,
+        description = "DB-API 2.0 interface for SQLite 3.x",
+        long_description=long_description,
+        author = "Gerhard Haering",
+        author_email = "gh@ghaering.de",
+        license = "zlib/libpng license",
+        platforms = "ALL",
+        url = "http://pysqlite.googlecode.com/",
+        download_url = "http://code.google.com/p/pysqlite/downloads/list",
 
-            # Description of the modules and packages in the distribution
-            package_dir = {"pysqlite2": "lib"},
-            packages = ["pysqlite2", "pysqlite2.test"] +
-                       (["pysqlite2.test.py25"], [])[sys.version_info < (2, 5)],
-            scripts=[],
-            data_files = data_files,
+        # Description of the modules and packages in the distribution
+        package_dir = {"pysqlite2": "lib"},
+        packages = ["pysqlite2", "pysqlite2.test"] +
+        (["pysqlite2.test.py25"], [])[sys.version_info < (2, 5)],
+        scripts=[],
+        data_files = data_files,
 
-            ext_modules = [Extension( name="pysqlite2._sqlite",
-                                      sources=sources,
-                                      include_dirs=include_dirs,
-                                      library_dirs=library_dirs,
-                                      runtime_library_dirs=runtime_library_dirs,
-                                      libraries=libraries,
-                                      extra_objects=extra_objects,
-                                      define_macros=define_macros
-                                      )],
-            classifiers = [
+        ext_modules = [Extension(name="pysqlite2._sqlite",
+                                 sources=sources,
+                                 include_dirs=include_dirs,
+                                 library_dirs=library_dirs,
+                                 runtime_library_dirs=runtime_library_dirs,
+                                 libraries=libraries,
+                                 extra_objects=extra_objects,
+                                 define_macros=define_macros
+                                 )],
+        classifiers = [
             "Development Status :: 5 - Production/Stable",
             "Intended Audience :: Developers",
             "License :: OSI Approved :: zlib/libpng License",
@@ -205,11 +214,13 @@ def get_setup_args():
             "Programming Language :: Python",
             "Topic :: Database :: Database Engines/Servers",
             "Topic :: Software Development :: Libraries :: Python Modules"],
-            cmdclass = {"build_docs": DocBuilder}
-            )
+        cmdclass = {"build_docs": DocBuilder}
+    )
 
-    setup_args["cmdclass"].update({"build_docs": DocBuilder, "build_ext": MyBuildExt, "build_static": AmalgamationBuilder, "cross_bdist_wininst": cross_bdist_wininst.bdist_wininst})
+    setup_args["cmdclass"].update({"build_docs": DocBuilder, "build_ext": MyBuildExt,
+                                   "build_static": AmalgamationBuilder, "cross_bdist_wininst": cross_bdist_wininst.bdist_wininst})
     return setup_args
+
 
 def main():
     setup(**get_setup_args())
